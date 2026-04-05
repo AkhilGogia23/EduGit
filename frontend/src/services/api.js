@@ -1,7 +1,16 @@
 import axios from 'axios'
 
+// Docker Compose: build with VITE_API_BASE_URL=/api (nginx proxies to backend).
+// Local dev: npm run dev uses http://localhost:8080/api when VITE is unset.
+const apiBase =
+  import.meta.env.VITE_API_BASE_URL && import.meta.env.VITE_API_BASE_URL !== ''
+    ? import.meta.env.VITE_API_BASE_URL.replace(/\/$/, '')
+    : import.meta.env.PROD
+      ? '/api'
+      : 'http://localhost:8080/api'
+
 export const api = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: apiBase,
   headers: { 'Content-Type': 'application/json' },
 })
 
